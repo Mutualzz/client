@@ -1,0 +1,33 @@
+{
+  "name": "@mutualzz/client",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/**",
+    "dist"
+  ],
+  "scripts": {
+    "build": "pnpm typecheck && bunchee",
+    "dev": "bunchee --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mutualzz/types": "workspace:*",
+    "mobx": "^6.16.1"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "bunchee": "^6.10.0"
+  }
+}

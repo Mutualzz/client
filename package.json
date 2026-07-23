@@ -23,11 +23,21 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@mutualzz/bitfield": "workspace:*",
     "@mutualzz/types": "workspace:*",
-    "mobx": "^6.16.1"
+    "@mutualzz/ui-core": "workspace:*",
+    "@mutualzz/validators": "workspace:*",
+    "chroma-js": "^3.1.2",
+    "dayjs": "^1.11.13",
+    "imurmurhash": "^0.1.4",
+    "markdown-it": "^14.2.0",
+    "mobx": "^6.16.1",
+    "mobx-persist-store": "^1.1.8",
+    "pako": "^2.1.0"
   },
   "devDependencies": {
     "@types/node": "^25.9.1",
+    "@types/pako": "^2.0.3",
     "bunchee": "^6.10.0"
   }
 }

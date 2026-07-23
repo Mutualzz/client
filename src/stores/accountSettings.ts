@@ -4,7 +4,7 @@ import type {
   UserExtendedSettings,
 } from "@mutualzz/types";
 
-import type { ObservableOrderedSet } from "../../collections/ObservableOrderedSet";
+import type { ObservableOrderedSet } from "../collections/ObservableOrderedSet";
 
 export type AccountSettingsPatch = Omit<APIUserSettings, "updatedAt">;
 
@@ -131,7 +131,10 @@ export class AccountSettingsSyncEngine {
     return this.isDirty(payload) ? payload : null;
   }
 
-  async sync(actions: AccountSettingsSyncActions, host: AccountSettingsSyncHost) {
+  async sync(
+    actions: AccountSettingsSyncActions,
+    host: AccountSettingsSyncHost,
+  ) {
     if (!host.account) return;
 
     const payload = actions.getPayload();
@@ -175,7 +178,9 @@ export function favoriteEmojiKey(
   unified: string,
   skinTone: string | null = null,
 ) {
-  return unified.startsWith("custom:") ? unified : `${unified}:${skinTone ?? ""}`;
+  return unified.startsWith("custom:")
+    ? unified
+    : `${unified}:${skinTone ?? ""}`;
 }
 
 export function toggleFavoriteEmoji(

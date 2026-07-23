@@ -14,7 +14,6 @@ export function messageDisplayLabelKey(value: MessageDisplay) {
 
 export function timestampFormatLabelKey(value: TimestampFormat) {
   if (value === "absolute") return "textAndChat.timestampAbsolute";
-  if (value === "both") return "textAndChat.timestampBoth";
   return "textAndChat.timestampRelative";
 }
 

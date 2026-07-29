@@ -8,6 +8,7 @@ export {
 } from "./utils/activityDisplay";
 export { adaptColors, applyAdaptiveThemeValues } from "./utils/adaptation";
 export { isCallNoticeMessage } from "./utils/callNoticeMessage";
+export { isChannelPinnedMessage } from "./utils/channelPinnedMessage";
 export { createCodec, type Codec, type Encoding } from "./utils/codec";
 export {
   createCompressor,
@@ -119,11 +120,18 @@ export {
   urlRegex,
 } from "./markdown";
 export { maskEmail } from "./account/maskEmail";
+export {
+  discordOAuthNativeReturnUrl,
+  isNativeDiscordOAuthClient,
+  type DiscordOAuthExchangeResult,
+} from "./discordAuth";
 export { ObservableOrderedSet } from "./collections/ObservableOrderedSet";
 export { JSONReplacer, normalizeJSON } from "./json/normalize";
 export {
   isAtMobileSpacesHub,
+  isResumeRoutePath,
   modeKeyToAppMode,
+  modeRouteTargetToPath,
   prepareDmsModeNavigation,
   prepareEmptySpacesNavigation,
   prepareFeedModeNavigation,
@@ -131,9 +139,9 @@ export {
   preferredChannelForSpace,
   resolveActiveModeKey,
   resolveModeRouteTarget,
+  resolveResumePath,
   shouldClearPendingMode,
   shouldIgnoreSpacesHubTap,
-  shouldPersistPreferredMode,
   type ModeRouteTarget,
 } from "./navigation/mode";
 export {
@@ -175,6 +183,10 @@ export {
   type SessionsRestHost,
 } from "./sessions";
 export {
+  getMessageAuthorColor,
+  type MessageAuthorColorInput,
+} from "./utils/messageAuthorColor";
+export {
   AccountSettingsSyncEngine,
   buildAccountSettingsPatch,
   computeSettingsHash,
@@ -183,6 +195,7 @@ export {
   isFavoriteEmoji,
   isFavoriteGif,
   mergeRemoteExtendedSettings,
+  mergeRemoteSettings,
   moveSpaceOrder,
   resetSpaceOrder,
   toggleFavoriteEmoji,

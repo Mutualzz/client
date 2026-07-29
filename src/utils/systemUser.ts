@@ -20,6 +20,7 @@ export function isSystemMessageType(
   return (
     n === MessageType.System ||
     n === MessageType.CallMissed ||
-    n === MessageType.CallEnded
+    n === MessageType.CallEnded ||
+    n === MessageType.ChannelPinned
   );
 }

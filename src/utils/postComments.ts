@@ -1,11 +1,11 @@
 export type CommentSort = "newest" | "oldest";
 
-export type CommentLike = {
+export interface CommentLike {
   id: string;
   createdAt: Date;
   content?: string | null;
   repliedToId?: string | null;
-};
+}
 
 export interface CommentThread<T extends CommentLike = CommentLike> {
   comment: T;

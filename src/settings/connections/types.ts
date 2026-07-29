@@ -1,6 +1,6 @@
 export type ConnectionProvider = "github" | "twitch" | "steam";
 
-export type ProviderConnectionDto = {
+export interface ProviderConnectionDto {
   provider: ConnectionProvider;
   available: boolean;
   connected: boolean;
@@ -8,7 +8,7 @@ export type ProviderConnectionDto = {
   externalUrl: string | null;
   shareOnProfile: boolean;
   expired?: boolean;
-};
+}
 
 export type SpotifyConnectionDto =
   | { connected: false; available: boolean }
@@ -21,16 +21,16 @@ export type SpotifyConnectionDto =
       expired?: boolean;
     };
 
-export type ConnectionsHealthDto = {
+export interface ConnectionsHealthDto {
   github: boolean;
   twitch: boolean;
   steam: boolean;
   spotify: boolean;
-};
+}
 
-export type UserConnectionsDto = {
+export interface UserConnectionsDto {
   providers: ProviderConnectionDto[];
-};
+}
 
 export const FALLBACK_CONNECTION_PROVIDERS: ConnectionProvider[] = [
   "github",

@@ -2,11 +2,11 @@ import type { MessageDisplay, UiDensity } from "@mutualzz/types";
 
 export const MESSAGE_GROUP_GAP_MS = 7 * 60 * 1000;
 
-export type MessageLayoutNativeStyles = {
+export interface MessageLayoutNativeStyles {
   paddingYNative: number;
   headerMarginTopNative: number;
   groupGapNative: number;
-};
+}
 
 const MESSAGE_DISPLAY_STYLES: Record<
   MessageDisplay,

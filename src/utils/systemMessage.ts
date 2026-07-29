@@ -2,12 +2,12 @@ import type { APIMessage, Snowflake as SnowflakeId } from "@mutualzz/types";
 import { MessageType } from "@mutualzz/types";
 import SnowflakeUtil from "./Snowflake";
 
-type SystemMessageUsers = {
+interface SystemMessageUsers {
   resolveSystem(): Promise<{
     id: SnowflakeId;
     toJSON(): APIMessage["author"];
   } | null>;
-};
+}
 
 export const createSystemMessage = async (
   users: SystemMessageUsers,

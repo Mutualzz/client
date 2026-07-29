@@ -20,7 +20,8 @@
   "scripts": {
     "build": "pnpm typecheck && bunchee",
     "dev": "bunchee --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src"
   },
   "dependencies": {
     "@mutualzz/bitfield": "workspace:*",
@@ -36,8 +37,10 @@
     "pako": "^2.1.0"
   },
   "devDependencies": {
+    "@mutualzz/eslint-config": "workspace:*",
     "@types/node": "^25.9.1",
     "@types/pako": "^2.0.3",
-    "bunchee": "^6.10.0"
+    "bunchee": "^6.10.0",
+    "eslint": "^10.8.0"
   }
 }

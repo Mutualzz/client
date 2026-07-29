@@ -33,6 +33,6 @@ export const JSONReplacer = function (
 };
 
 export const normalizeJSON = <T>(obj: T): T => {
-  if (obj === null || obj === undefined) return obj as T;
+  if (obj === null || obj === undefined) return obj;
   return JSON.parse(JSON.stringify(obj, JSONReplacer), JSONReplacer);
 };

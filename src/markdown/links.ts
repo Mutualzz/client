@@ -1,6 +1,6 @@
 import Token from "markdown-it/lib/token.mjs";
 
-export const urlRegex = /https:\/\/[A-Za-z0-9\-._~:/?#\[\]@!$&'()*+,;=%]+/g;
+export const urlRegex = /https:\/\/[A-Za-z0-9\-._~:/?#[\]@!$&'()*+,;=%]+/g;
 
 export function stripMarkdownSuffix(url: string) {
   while (url.length) {

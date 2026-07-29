@@ -1,6 +1,6 @@
 import { makeAutoObservable } from "mobx";
 
-type Node<T> = { v: T; prev: Node<T> | null; next: Node<T> | null };
+interface Node<T> { v: T; prev: Node<T> | null; next: Node<T> | null }
 
 export class ObservableOrderedSet<T> {
   head: Node<T> | null = null;

@@ -2,20 +2,20 @@ import type { APIMeSession } from "@mutualzz/types";
 
 export type { APIMeSession };
 
-export type SessionsRestHost = {
+export interface SessionsRestHost {
   rest: {
     get<T>(path: string): Promise<T>;
     delete<T = unknown>(path: string): Promise<T>;
   };
-};
+}
 
-export type SessionRevokeResult = {
+export interface SessionRevokeResult {
   success: true;
-};
+}
 
-export type RevokeOtherSessionsResult = {
+export interface RevokeOtherSessionsResult {
   success: true;
   revoked: number;
-};
+}
 
 export const ME_SESSIONS_QUERY_KEY = ["me-sessions"] as const;

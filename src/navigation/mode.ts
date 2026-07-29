@@ -10,7 +10,7 @@ export type ModeRouteTarget =
   | { type: "spaces"; spaceId: string; channelId?: string }
   | { type: "spaces-list" };
 
-type ModeNavigationApp = {
+interface ModeNavigationApp {
   mode: AppMode | null;
   setMode: (mode: AppMode) => void;
   spaces: {
@@ -28,22 +28,22 @@ type ModeNavigationApp = {
   };
   setSpacesDrawerOpen?: (open: boolean) => void;
   setDMDrawerOpen?: (open: boolean) => void;
-};
+}
 
-type ChannelNavCandidate = {
+interface ChannelNavCandidate {
   id: string;
   canRedirect?: boolean;
-};
+}
 
-type SpaceNavApp = {
+interface SpaceNavApp {
   id: string;
   channels: ChannelNavCandidate[];
   members: {
     me?: { canViewChannel: (channel: ChannelNavCandidate) => boolean } | null;
   };
-};
+}
 
-type ModeRouteApp = {
+interface ModeRouteApp {
   spaces: {
     mostRecentSpace?: SpaceNavApp | null;
     all: SpaceNavApp[];
@@ -58,7 +58,7 @@ type ModeRouteApp = {
     ) => ChannelNavCandidate | undefined;
     dms?: ChannelNavCandidate[];
   };
-};
+}
 
 export function resolveActiveModeKey(
   pathname: string,
@@ -108,8 +108,55 @@ export function shouldIgnoreSpacesHubTap(
   );
 }
 
-export function shouldPersistPreferredMode(modeKey: ModeKey) {
-  return modeKey === "spaces" || modeKey === "feed";
+export function isResumeRoutePath(pathname: string): boolean {
+  const normalized = pathname.replace(/\/+/g, "/").replace(/\/$/, "") || "/";
+
+  if (
+    normalized === "/feed" ||
+    normalized.startsWith("/feed/") ||
+    normalized === "/@me" ||
+    normalized.startsWith("/@me/")
+  ) {
+    return true;
+  }
+
+  if (!normalized.startsWith("/spaces")) return false;
+  if (normalized.includes("/settings")) return false;
+
+  return true;
+}
+
+export function modeRouteTargetToPath(target: ModeRouteTarget): string {
+  switch (target.type) {
+    case "feed":
+      return "/feed";
+    case "dms":
+      return target.channelId ? `/@me/${target.channelId}` : "/@me";
+    case "spaces-list":
+      return "/spaces";
+    case "spaces":
+      if (target.channelId) return `/spaces/channel/${target.channelId}`;
+      return `/spaces/${target.spaceId}`;
+  }
+}
+
+export function resolveResumePath(
+  app: ModeRouteApp,
+  lastRoute: string | null | undefined,
+  fallbackMode: AppMode | null = null,
+): string {
+  if (lastRoute && isResumeRoutePath(lastRoute)) {
+    return lastRoute;
+  }
+
+  const mode =
+    fallbackMode ??
+    (lastRoute ? modeKeyFromPath(lastRoute) : null) ??
+    "spaces";
+
+  return modeRouteTargetToPath(
+    resolveModeRouteTarget(app, mode === "@me" ? "dms" : mode),
+  );
 }
 
 export function prepareSpaceHubNavigation(

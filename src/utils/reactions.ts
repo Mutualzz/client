@@ -7,16 +7,16 @@ import type {
   APIExpression,
 } from "@mutualzz/types";
 
-export type ReactionPickerEmoji = {
+export interface ReactionPickerEmoji {
   unified: string;
   skinVariations?: Partial<
     Record<string, { unified: string } | undefined>
   >;
-};
+}
 
-export type ReactionExpression = {
+export interface ReactionExpression {
   toJSON(): APIExpression;
-};
+}
 
 export const unifiedToEmoji = (unified: string) =>
   unified

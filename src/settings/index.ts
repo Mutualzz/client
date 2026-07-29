@@ -12,6 +12,14 @@ export {
   type UserConnectionsDto,
 } from "./connections";
 export {
+  appearanceSettingsFields,
+  messagesSettingsFields,
+  privacySettingsFields,
+  type AppearanceSettingsField,
+  type AppearanceSettingsPatch,
+  type MessagesSettingsField,
+  type MessagesSettingsPatch,
+  type PrivacySettingsField,
   appearanceExtendedSettingsFields,
   messagesExtendedSettingsFields,
   privacyExtendedSettingsFields,
@@ -21,7 +29,7 @@ export {
   type MessagesExtendedSettingsPatch,
   type PrivacyExtendedSettingsField,
   type PrivacyExtendedSettingsPatch,
-} from "./extendedSettingsFields";
+} from "./settingsFieldGroups";
 export {
   messageDisplayLabelKey,
   privacyLabelKey,

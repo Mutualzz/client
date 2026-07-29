@@ -4,7 +4,7 @@ import { resolveMarkdownTextColor } from "@mutualzz/validators";
 export const COLOR_RE = /\[color=([^\]]+)\]([\s\S]*?)\[\/color\]/gi;
 export const COLOR_CLOSE = "[/color]";
 
-type CharMap = { tokenIndex: number; offset: number };
+interface CharMap { tokenIndex: number; offset: number }
 
 const isBreak = (token: Token) =>
   token.type === "softbreak" || token.type === "hardbreak";

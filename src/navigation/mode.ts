@@ -1,14 +1,12 @@
-import {
-  modeKeyFromPath,
-  type AppMode,
-  type ModeKey,
-} from "@mutualzz/types";
+import { modeKeyFromPath, type AppMode, type ModeKey } from "@mutualzz/types";
 
 export type ModeRouteTarget =
   | { type: "feed" }
   | { type: "dms"; channelId?: string }
   | { type: "spaces"; spaceId: string; channelId?: string }
   | { type: "spaces-list" };
+
+export type ModeRouteStyle = "mobile" | "desktop";
 
 interface ModeNavigationApp {
   mode: AppMode | null;
@@ -103,9 +101,7 @@ export function shouldIgnoreSpacesHubTap(
   pending: ModeKey | null,
   atSpacesHub: boolean,
 ) {
-  return (
-    modeKey === "spaces" && active === "spaces" && !pending && atSpacesHub
-  );
+  return modeKey === "spaces" && active === "spaces" && !pending && atSpacesHub;
 }
 
 export function isResumeRoutePath(pathname: string): boolean {
@@ -126,7 +122,10 @@ export function isResumeRoutePath(pathname: string): boolean {
   return true;
 }
 
-export function modeRouteTargetToPath(target: ModeRouteTarget): string {
+export function modeRouteTargetToPath(
+  target: ModeRouteTarget,
+  style: ModeRouteStyle = "mobile",
+): string {
   switch (target.type) {
     case "feed":
       return "/feed";
@@ -135,27 +134,55 @@ export function modeRouteTargetToPath(target: ModeRouteTarget): string {
     case "spaces-list":
       return "/spaces";
     case "spaces":
-      if (target.channelId) return `/spaces/channel/${target.channelId}`;
+      if (target.channelId) {
+        return style === "desktop"
+          ? `/spaces/${target.spaceId}/${target.channelId}`
+          : `/spaces/channel/${target.channelId}`;
+      }
       return `/spaces/${target.spaceId}`;
   }
+}
+
+function normalizeResumeRoute(
+  app: ModeRouteApp,
+  route: string,
+  style: ModeRouteStyle,
+): string | undefined {
+  const normalized = route.replace(/\/+/g, "/").replace(/\/$/, "") || "/";
+  const mobileChannelMatch = normalized.match(/^\/spaces\/channel\/([^/]+)$/);
+  const desktopChannelMatch = normalized.match(/^\/spaces\/([^/]+)\/([^/]+)$/);
+
+  if (style === "mobile" && desktopChannelMatch) {
+    return `/spaces/channel/${desktopChannelMatch[2]}`;
+  }
+
+  if (style !== "desktop" || !mobileChannelMatch) return normalized;
+
+  const channelId = mobileChannelMatch[1];
+  const space = app.spaces.all.find((candidate) =>
+    candidate.channels.some((channel) => channel.id === channelId),
+  );
+
+  return space ? `/spaces/${space.id}/${channelId}` : undefined;
 }
 
 export function resolveResumePath(
   app: ModeRouteApp,
   lastRoute: string | null | undefined,
   fallbackMode: AppMode | null = null,
+  style: ModeRouteStyle = "mobile",
 ): string {
   if (lastRoute && isResumeRoutePath(lastRoute)) {
-    return lastRoute;
+    const normalized = normalizeResumeRoute(app, lastRoute, style);
+    if (normalized) return normalized;
   }
 
   const mode =
-    fallbackMode ??
-    (lastRoute ? modeKeyFromPath(lastRoute) : null) ??
-    "spaces";
+    fallbackMode ?? (lastRoute ? modeKeyFromPath(lastRoute) : null) ?? "spaces";
 
   return modeRouteTargetToPath(
     resolveModeRouteTarget(app, mode === "@me" ? "dms" : mode),
+    style,
   );
 }
 
@@ -190,18 +217,12 @@ export function prepareEmptySpacesNavigation(app: ModeNavigationApp) {
   app.setSpacesDrawerOpen?.(true);
 }
 
-export function preferredChannelForSpace(
-  app: ModeRouteApp,
-  spaceId: string,
-) {
+export function preferredChannelForSpace(app: ModeRouteApp, spaceId: string) {
   const space = app.spaces.get(spaceId);
   if (!space) return undefined;
 
   const mostRecent = app.channels.getMostRecentChannelForSpace(spaceId);
-  if (
-    mostRecent?.canRedirect &&
-    space.members.me?.canViewChannel(mostRecent)
-  ) {
+  if (mostRecent?.canRedirect && space.members.me?.canViewChannel(mostRecent)) {
     return mostRecent;
   }
 
@@ -226,8 +247,7 @@ export function resolveModeRouteTarget(
 
   if (target === "@me") {
     const preferredDM =
-      app.channels.getMostRecentChannelForSpace("@me") ??
-      app.channels.dms?.[0];
+      app.channels.getMostRecentChannelForSpace("@me") ?? app.channels.dms?.[0];
     return { type: "dms", channelId: preferredDM?.id };
   }
 

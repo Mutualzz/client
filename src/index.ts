@@ -30,7 +30,11 @@ export {
   isOnlyInviteUrl,
   shouldHideInviteUrlContent,
 } from "./utils/inviteLinks";
-export { minecraftAvatarUrl } from "./utils/minecraft";
+export {
+  minecraftAvatarUrl,
+  minecraftSkinUrl,
+  minecraftServerLabel,
+} from "./utils/minecraft";
 export {
   buildCommentThreads,
   COMMENTS_PAGE_SIZE,
@@ -61,9 +65,7 @@ export {
   isSystemUser,
   SYSTEM_USER_ID,
 } from "./utils/systemUser";
-export {
-  createSystemMessage,
-} from "./utils/systemMessage";
+export { createSystemMessage } from "./utils/systemMessage";
 export {
   STATUS_DURATION_OPTIONS,
   type StatusDurationOption,

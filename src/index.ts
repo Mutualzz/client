@@ -30,11 +30,7 @@ export {
   isOnlyInviteUrl,
   shouldHideInviteUrlContent,
 } from "./utils/inviteLinks";
-export {
-  minecraftAvatarUrl,
-  minecraftSkinUrl,
-  minecraftServerLabel,
-} from "./utils/minecraft";
+export * from "./utils/minecraft";
 export {
   buildCommentThreads,
   COMMENTS_PAGE_SIZE,

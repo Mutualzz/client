@@ -31,6 +31,7 @@ export {
   shouldHideInviteUrlContent,
 } from "./utils/inviteLinks";
 export * from "./utils/minecraft";
+export * from "./minecraft/inventory";
 export {
   buildCommentThreads,
   COMMENTS_PAGE_SIZE,

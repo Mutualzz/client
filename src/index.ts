@@ -1,11 +1,4 @@
-export {
-  activityTypeLabelKey,
-  formatActivityCompact,
-  formatActivityDuration,
-  formatActivityElapsedClock,
-  formatActivityPrimary,
-  formatActivitySecondary,
-} from "./utils/activityDisplay";
+export * from "./utils/activityDisplay";
 export { adaptColors, applyAdaptiveThemeValues } from "./utils/adaptation";
 export { isCallNoticeMessage } from "./utils/callNoticeMessage";
 export { isChannelPinnedMessage } from "./utils/channelPinnedMessage";
@@ -152,8 +145,6 @@ export {
   messageDisplayLabelKey,
   privacyExtendedSettingsFields,
   privacyLabelKey,
-  SPOTIFY_CONNECTION_QUERY_KEY,
-  SPOTIFY_CURRENTLY_PLAYING_QUERY_KEY,
   timestampFormatLabelKey,
   uiDensityLabelKey,
   USER_CONNECTIONS_QUERY_KEY,
@@ -166,7 +157,6 @@ export {
   type PrivacyExtendedSettingsField,
   type PrivacyExtendedSettingsPatch,
   type ProviderConnectionDto,
-  type SpotifyConnectionDto,
   type UserConnectionsDto,
 } from "./settings";
 export {
@@ -204,3 +194,4 @@ export {
   type AccountSettingsSyncActions,
   type AccountSettingsSyncHost,
 } from "./stores/accountSettings";
+export * from "./utils/lyrics";

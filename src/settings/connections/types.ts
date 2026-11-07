@@ -10,22 +10,10 @@ export interface ProviderConnectionDto {
   expired?: boolean;
 }
 
-export type SpotifyConnectionDto =
-  | { connected: false; available: boolean }
-  | {
-      connected: true;
-      displayName: string | null;
-      externalUrl: string | null;
-      shareSpotify: boolean;
-      available: boolean;
-      expired?: boolean;
-    };
-
 export interface ConnectionsHealthDto {
   github: boolean;
   twitch: boolean;
   steam: boolean;
-  spotify: boolean;
 }
 
 export interface UserConnectionsDto {

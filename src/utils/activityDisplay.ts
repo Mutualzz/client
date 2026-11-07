@@ -36,11 +36,7 @@ export function formatActivityElapsedClock(
   now: number,
 ): string | null {
   if (start == null || !Number.isFinite(start) || start > now) return null;
-  const totalSec = Math.max(0, Math.floor((now - start) / 1000));
-  const h = Math.floor(totalSec / 3600);
-  const m = Math.floor((totalSec % 3600) / 60);
-  const s = totalSec % 60;
-  return `${pad2(h)}:${pad2(m)}:${pad2(s)}`;
+  return formatTrackClock(now - start);
 }
 
 export function formatActivityDuration(
@@ -51,4 +47,42 @@ export function formatActivityDuration(
     return null;
   }
   return formatActivityElapsedClock(startedAt, endedAt);
+}
+
+export function formatTrackClock(totalMs: number): string {
+  const totalSeconds = Math.max(0, Math.floor(totalMs / 1000));
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return hours > 0
+    ? `${hours}:${pad2(minutes)}:${pad2(seconds)}`
+    : `${minutes}:${pad2(seconds)}`;
+}
+
+export interface ActivityProgress {
+  elapsedMs: number;
+  durationMs: number;
+  fraction: number;
+}
+
+export function getActivityProgress(
+  activity: PresenceActivity,
+  now: number,
+): ActivityProgress | null {
+  const start = activity.timestamps?.start;
+  const end = activity.timestamps?.end;
+  if (start == null || end == null || end <= start) return null;
+
+  const durationMs = end - start;
+  const elapsedMs = Math.min(Math.max(now - start, 0), durationMs);
+  return { elapsedMs, durationMs, fraction: elapsedMs / durationMs };
+}
+
+export function activityLinkHost(url: string | undefined): string | null {
+  if (!url) return null;
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return null;
+  }
 }

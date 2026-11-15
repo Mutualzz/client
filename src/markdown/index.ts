@@ -1,12 +1,5 @@
-export {
-  COLOR_CLOSE,
-  COLOR_RE,
-  processColorTokens,
-} from "./color";
-export { customEmojiRegex, processCustomEmojiTokens } from "./customEmoji";
-export {
-  processLinkTokens,
-  stripMarkdownSuffix,
-  urlRegex,
-} from "./links";
-export { mentionRegex, processMentionTokens } from "./mention";
+export * from "./color";
+export * from "./customEmoji";
+export * from "./links";
+export * from "./mention";
+export * from "./effect";

@@ -15,10 +15,6 @@ export const JSONReplacer = function (
     return this[key].toString();
   }
 
-  if (this[key] === "null") return null;
-  if (this[key] === "false") return false;
-  if (this[key] === "true") return true;
-
   const current = this[key];
   if (
     current &&

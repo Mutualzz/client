@@ -2,6 +2,7 @@ import type { APITheme } from "@mutualzz/types";
 import {
   baseDarkTheme,
   baseLightTheme,
+  createColor,
   extractColors,
   formatColor,
   isValidGradient,
@@ -33,6 +34,44 @@ const ensureContrast = (bg: chroma.Color, fg: chroma.Color, minRatio = 4.5) => {
     darkenSteps++;
   }
   return lightenSteps < darkenSteps ? lighten.hex() : darken.hex();
+};
+
+const ensureContrastAgainst = (
+  color: chroma.Color,
+  references: chroma.Color[],
+  minRatio: number,
+) => {
+  const lowestContrast = (candidate: chroma.Color) =>
+    Math.min(
+      ...references.map((reference) => chroma.contrast(candidate, reference)),
+    );
+  const stepAmount = 0.03;
+  const maxSteps = 100;
+
+  let lighter = color;
+  let darker = color;
+  let lighterSteps = 0;
+  let darkerSteps = 0;
+
+  while (lowestContrast(lighter) < minRatio && lighterSteps < maxSteps) {
+    lighter = lighter.brighten(stepAmount);
+    lighterSteps++;
+  }
+  while (lowestContrast(darker) < minRatio && darkerSteps < maxSteps) {
+    darker = darker.darken(stepAmount);
+    darkerSteps++;
+  }
+
+  const lighterPasses = lowestContrast(lighter) >= minRatio;
+  const darkerPasses = lowestContrast(darker) >= minRatio;
+
+  if (lighterPasses && darkerPasses)
+    return (lighterSteps <= darkerSteps ? lighter : darker).hex();
+  if (lighterPasses) return lighter.hex();
+  if (darkerPasses) return darker.hex();
+  return (
+    lowestContrast(lighter) >= lowestContrast(darker) ? lighter : darker
+  ).hex();
 };
 
 function blendSemantic(baseHex: string, themeBase: chroma.Color) {
@@ -86,8 +125,8 @@ export const adaptColors = ({
     lighten: prefersDark ? 10 : 50,
   });
 
-  const surfaceColors = gradientColors.map((c) =>
-    formatColor(c, { lighten: prefersDark ? 10 : 50 }),
+  const surfaceColors = gradientColors.map((stopColor) =>
+    formatColor(stopColor, { lighten: prefersDark ? 10 : 50 }),
   );
   const surfaceBase = averageColors(surfaceColors);
 
@@ -98,12 +137,19 @@ export const adaptColors = ({
     .set("hsl.l", neutralLightness)
     .hex();
 
-  const typographyPrimary = ensureContrast(text, base, 4.5);
-  const typographySecondary = ensureContrast(text.brighten(0.5), base, 3.5);
-  const typographyAccent = ensureContrast(primary, base, 4.5);
-  const typographyMuted = chroma(ensureContrast(text.desaturate(2), base, 3))
-    .alpha(0.7)
-    .hex();
+  const textBackgrounds = [base, surfaceBase];
+  const typographyPrimary = ensureContrastAgainst(text, textBackgrounds, 4.5);
+  const typographySecondary = ensureContrastAgainst(
+    text.brighten(0.5),
+    textBackgrounds,
+    4.5,
+  );
+  const typographyAccent = ensureContrastAgainst(primary, textBackgrounds, 4.5);
+  const typographyMuted = ensureContrastAgainst(
+    chroma.mix(text.desaturate(2), base, 0.35),
+    textBackgrounds,
+    3,
+  );
 
   const danger = ensureContrast(
     blendSemantic(SEMANTIC_BASES.danger, base),
@@ -145,19 +191,25 @@ export const adaptColors = ({
   };
 };
 
-export const applyAdaptiveThemeValues = (
-  values: APITheme,
-  prefersDark: boolean,
-): APITheme => {
+export const isDarkBaseColor = (baseColor: ColorLike) => {
+  const gradientStops = isValidGradient(baseColor)
+    ? (extractColors(baseColor) ?? [])
+    : [];
+  return createColor(gradientStops[0] ?? baseColor).isDark();
+};
+
+export const applyAdaptiveThemeValues = (values: APITheme): APITheme => {
+  const generateDark = isDarkBaseColor(values.colors.background);
   const adapted = adaptColors({
     baseColor: values.colors.background,
     primaryColor: values.colors.primary,
     primaryText: values.typography.colors.primary,
-    prefersDark,
+    prefersDark: generateDark,
   });
 
   return {
     ...values,
+    type: generateDark ? "dark" : "light",
     colors: adapted.colors as APITheme["colors"],
     typography: {
       ...values.typography,

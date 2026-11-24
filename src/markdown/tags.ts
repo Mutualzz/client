@@ -188,5 +188,5 @@ export function processTagTokens(
   }
 
   children.splice(0, children.length, ...next);
-  recurse();
+  processTagTokens(children, definition);
 }
